@@ -4,29 +4,36 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"hash/fnv"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
-	"github.com/roman-mazur/design-practice-2-template/httptools"
-	"github.com/roman-mazur/design-practice-2-template/signal"
+	"github.com/burbokop/balanser/httptools"
+	"github.com/burbokop/balanser/signal"
 )
 
 var (
-	port = flag.Int("port", 8090, "load balancer port")
+	port       = flag.Int("port", 8090, "load balancer port")
 	timeoutSec = flag.Int("timeout-sec", 3, "request timeout time in seconds")
-	https = flag.Bool("https", false, "whether backends support HTTPs")
+	https      = flag.Bool("https", false, "whether backends support HTTPs")
 
 	traceEnabled = flag.Bool("trace", false, "whether to include tracing information into responses")
 )
 
+type Server struct {
+	Name    string
+	IsAlive bool
+}
+
 var (
-	timeout = time.Duration(*timeoutSec) * time.Second
-	serversPool = []string{
-		"server1:8080",
-		"server2:8080",
-		"server3:8080",
+	timeout     = time.Duration(*timeoutSec) * time.Second
+	serversPool = []Server{
+		{Name: "server1:8080", IsAlive: false},
+		{Name: "server2:8080", IsAlive: false},
+		{Name: "server3:8080", IsAlive: false},
 	}
 )
 
@@ -84,22 +91,43 @@ func forward(dst string, rw http.ResponseWriter, r *http.Request) error {
 	}
 }
 
+func hash64(s string) uint64 {
+	h := fnv.New64a()
+	h.Write([]byte(s))
+	return h.Sum64()
+}
+
+func chooseServer(serversPool []Server, url *url.URL) (*uint64, error) {
+	index := hash64(url.Path) % uint64(len(serversPool))
+	for i := 0; i < len(serversPool) && !serversPool[index].IsAlive; i++ {
+		index = (index + 1) % uint64(len(serversPool))
+	}
+	if serversPool[index].IsAlive {
+		return &index, nil
+	} else {
+		return nil, fmt.Errorf("balancer: no alive servers found")
+	}
+}
+
 func main() {
 	flag.Parse()
 
-	// TODO: Використовуйте дані про стан сервреа, щоб підтримувати список тих серверів, яким можна відправляти ззапит.
-	for _, server := range serversPool {
-		server := server
-		go func() {
+	for i := range serversPool {
+		go func(i int) {
 			for range time.Tick(10 * time.Second) {
-				log.Println(server, health(server))
+				serversPool[i].IsAlive = health(serversPool[i].Name)
 			}
-		}()
+		}(i)
 	}
 
 	frontend := httptools.CreateServer(*port, http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		// TODO: Рееалізуйте свій алгоритм балансувальника.
-		forward(serversPool[0], rw, r)
+		index, err := chooseServer(serversPool, r.URL)
+		if err != nil {
+			rw.WriteHeader(http.StatusServiceUnavailable)
+			rw.Write([]byte(err.Error()))
+			return
+		}
+		forward(serversPool[*index].Name, rw, r)
 	}))
 
 	log.Println("Starting load balancer...")

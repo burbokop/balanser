@@ -1,0 +1,22 @@
+language: go
+
+go: 
+  - master
+
+
+before_deploy:
+  - wget https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip
+  - sudo unzip ninja-linux.zip -d /usr/local/bin/
+  - sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 --force
+  - ninja --version
+  - bash ./scripts/build.sh
+  - bash ./scripts/run-integration.sh
+
+
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "ZAnNu5TRQDED64S8jhpxuKnQKTpXMXnUa040dtHWB9tJ/OPQtR2+yAq6aowYkdm6BFlahjzW1a2nFKhcunbteO+2TxK5QHppCVhuBRyIPXTFl/8bNkhZGzMWxPS3eaTXh++a83rU/QVYgv85JCHLpQ3DoYMvRRDeceaWBoWFmcVKJGQ/4MnJKp5/tigqp8iOaxWS9XGwgPDbe1KPzWejKFOsaTuol3bvHkBA5K4bgD+6VubaXXl7yzfNYUgbziYw6NhM0lni8tjPCOgmNb3CwSlnb8POKEJcIhLugPqputWwoqWBPeM85ippCFMXPR9eTbbfC/RGXu035R7t+WYrruBI0RHu5vzim+AP06mZtC61171bqwXlZHGbW3KTfFgDoIzLrmhEtXxyAlfbYJqXqX1dbCKW+swgK/CpnpnWCalYMeX4xJJkYz3J+gDqJPK2Jdak0mEfn+GgaXkMnBvK8dWEpQZs/tOR85GDKddN8WGkjT5pcX+khfthhxPopoMlyptp4qkNrecrxL+coFjO8Qt5gXCF+FXz9djlW9Rq0TzMiD2lgrLrqrVKXmO0rfm0spgfnwTrxokuExHvvHfFfbhQjU0MsPrqTM6+iRpuGgVkD8Aj86Bxk/TKclVfrbiBzE/VNDr/OSd1h75N/XEohzmsNRTkp+ybbT6IT5GDChM="
+  file: "./out/bin/bood"
+  skip_cleanup: true

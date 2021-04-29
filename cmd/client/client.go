@@ -15,8 +15,10 @@ func main() {
 	client := new(http.Client)
 	client.Timeout = 10 * time.Second
 
+	id := 0
 	for range time.Tick(1 * time.Second) {
-		resp, err := client.Get(fmt.Sprintf("%s/api/v1/some-data", *target))
+		resp, err := client.Get(fmt.Sprintf("%s/api/v1/some-data/%d", *target, id))
+		id = (id + 1) % 3
 		if err == nil {
 			log.Printf("response %d", resp.StatusCode)
 		} else {
