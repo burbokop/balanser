@@ -3,6 +3,8 @@ language: go
 go: 
   - master
 
+services:
+  - docker
 
 before_deploy:
   - wget https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip
