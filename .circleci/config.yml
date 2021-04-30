@@ -18,9 +18,11 @@ jobs:
           paths:
             - "/go/pkg/mod"
       - run:
-          name: Run tests
-          command: |
-            mkdir -p /tmp/test-reports
-            gotestsum --junitfile /tmp/test-reports/unit-tests.xml
-      - store_test_results:
-          path: /tmp/test-reports
+          name: Install ninja
+          command: ./scripts/install_ninja.sh
+      - run:
+          name: Run build
+          command: ./scripts/build.sh
+      - run:
+          name: Run integration tests
+          command: ./scripts/run-integration.sh
