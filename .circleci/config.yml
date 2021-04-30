@@ -24,6 +24,9 @@ jobs:
           name: Check env
           command: env
       - run:
+          name: ls gopath
+          command: ls /go
+      - run:
           name: Run build
           command: ./scripts/build.sh
       - run:
