@@ -21,6 +21,9 @@ jobs:
           name: Install ninja
           command: ./scripts/install_ninja.sh
       - run:
+          name: Check env
+          command: env
+      - run:
           name: Run build
           command: ./scripts/build.sh
       - run:
