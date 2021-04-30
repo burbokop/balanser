@@ -4,7 +4,7 @@
 echo "Running build ..."
 pwd
 
-go get github.com/burbokop/design-practice-1
+go get -u github.com/burbokop/design-practice-1/build/cmd/bood
 
 echo "ls $GOPATH/bin ..."
 ls $GOPATH/bin
