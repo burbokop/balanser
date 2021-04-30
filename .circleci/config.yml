@@ -24,6 +24,9 @@ jobs:
           name: Check env
           command: env
       - run:
+          name: Export go bin
+          command: export PATH = $GOPATH/bin
+      - run:
           name: ls gopath
           command: ls /go
       - run:
