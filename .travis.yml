@@ -11,10 +11,3 @@ script:
   - bash ./scripts/run-integration.sh
 
 
-
-deploy:
-  provider: releases
-  api_key:
-    secure: "Zdtr5wE4ACJqUaVOlZIyOrpFq4NysfQEl26/nCycySKgivPVuZHiFdYTYrD3lLMDIamTaoNa5UykKzAHGmEWSaWu2obxZTo3Jb0OKCRKCHwstStquE5j0CGaL+evpMsuMzRA/RHHRQp8m30vB5ENXwO8fJyEkRVLQjvZyx20Lb64+O/u+/G2r0wj24IT0QpPkXPt3sFLWfhKcwIaMBDs9xHCfGLnzPZ/Ovfijz5+P5tO+mdYTvbTJTQwpCs+soNYs1gMDWqOZfYHKjFMOvkt/FLOGzWeNCKb2KDKdwG6klr2yX7MedTWgTpH3pt19++H4wpPijovXamOuxG0xKiYvaU29qePEilVGPeZmPThScTgSwVwwvxnw6ZBLRex56mLs9/u24aomjXz+/jhTQk8RHTDrOo56h9x4jgUjq9mO3F0LVCcHZ9yK6FkROjF6Zs0zt4xLNmFtX1aRAmuIDSZ9htOEY1BQ9e2DpvH6+2GVZOATgUO9s2fuOjCglcRZc2Hid/AHYs42er1OCMxPfcl47cbdMR4N/RgiNongJBIb9PbSpBEyuRBHrHwV0pnPpulUhkSEdlG9jz/hw+O+nvpXNDOcPdwCD8fGZeQ8Dn3Gu0daSEJ0euPobsN7xDWaIQtJeuT+AV9cuHVyT3w0ubHoqKaEONgJe3/zNRJNm6q94k="
-  file: "./out/bin/bood"
-  skip_cleanup: true
