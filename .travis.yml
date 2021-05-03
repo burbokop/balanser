@@ -9,5 +9,3 @@ script:
   - sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 --force
   - ninja --version
   - bash ./scripts/run-integration.sh
-
-
