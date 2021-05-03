@@ -8,5 +8,8 @@ WORKDIR /go/src/practice-2
 COPY . .
 
 
-ENTRYPOINT ["bood", "--task", "integration-tests"]
+# ENTRYPOINT ["bood", "--task", "integration-tests"]
+
+ENTRYPOINT ["./scripts/bood_it.sh"]
+
 # ENTRYPOINT ["echo", "ok2"]
