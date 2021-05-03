@@ -7,7 +7,6 @@ RUN go get -u github.com/burbokop/design-practice-1/build/cmd/bood
 WORKDIR /go/src/practice-2
 COPY . .
 
-RUN sleep 10
 
 ENTRYPOINT ["bood", "--task", "integration-tests"]
 # ENTRYPOINT ["echo", "ok2"]
