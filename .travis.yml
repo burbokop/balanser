@@ -8,7 +8,6 @@ script:
   - sudo unzip ninja-linux.zip -d /usr/local/bin/
   - sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 --force
   - ninja --version
-  - bash ./scripts/build.sh
   - bash ./scripts/run-integration.sh
 
 
