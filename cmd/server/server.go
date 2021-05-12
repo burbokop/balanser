@@ -44,7 +44,7 @@ func main() {
 			{
 				Name:    "get-some-data",
 				Method:  "GET",
-				Pattern: "/api/v1/some-data",
+				Pattern: "/api/v1/some-data/{id:[0-9]+}",
 				HandlerFunc: func(writer http.ResponseWriter, request *http.Request) {
 					key, err := httptools.GetStringFromQuery("key", true, request)
 					if err != nil {

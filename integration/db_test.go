@@ -15,7 +15,7 @@ type DBValue struct {
 }
 
 func getValue(key string, c *check.C) DBValue {
-	responce, err := client.Get(fmt.Sprintf("%s/api/v1/some-data?key=%s", baseAddress, key))
+	responce, err := client.Get(fmt.Sprintf("%s/api/v1/some-data/0?key=%s", baseAddress, key))
 	c.Check(err, check.IsNil)
 	result := &DBValue{}
 	err = httptools.DecodeBodyAndClose(responce.Body, result)

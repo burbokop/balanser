@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/binary"
 	"fmt"
+	"io"
 )
 
 type entry struct {
@@ -66,4 +67,52 @@ func readValue(in *bufio.Reader) (string, error) {
 	}
 
 	return string(data), nil
+}
+
+const bufSize = 8192
+
+func readAll(in *bufio.Reader, cb func(e entry, n int64) error) (int64, error) {
+	var buf [bufSize]byte
+	var fileSize int64 = 0
+	var err error = nil
+	for err == nil {
+		var (
+			header, data []byte
+			n            int
+		)
+		header, err = in.Peek(bufSize)
+		if err == io.EOF {
+			if len(header) == 0 {
+				return fileSize, err
+			}
+		} else if err != nil {
+			return fileSize, err
+		}
+		size := binary.LittleEndian.Uint32(header)
+
+		if size < bufSize {
+			data = buf[:size]
+		} else {
+			data = make([]byte, size)
+		}
+		n, err = in.Read(data)
+
+		if err == nil {
+			if n != int(size) {
+				return fileSize, fmt.Errorf("corrupted file")
+			}
+
+			var e entry
+			e.Decode(data)
+			err = cb(e, int64(n))
+			if err != nil {
+				return fileSize, err
+			}
+			fileSize += int64(n)
+		}
+	}
+	if err != nil {
+		return fileSize, err
+	}
+	return fileSize, nil
 }

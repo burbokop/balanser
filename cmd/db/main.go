@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/burbokop/balanser/cmd/db/datastore"
 	"github.com/burbokop/balanser/httptools"
@@ -15,7 +16,8 @@ var port = flag.Int("port", 2361, "db port")
 func main() {
 	flag.Parse()
 
-	db, err := datastore.NewDb("./db_segments")
+	dur := time.Minute
+	db, err := datastore.NewDb("./db_segments", 1024, &dur)
 
 	if err != nil {
 		log.Fatalln("error createing db:", err)
